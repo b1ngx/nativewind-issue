@@ -1,0 +1,28 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-android:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Assemble Release
+        run: cd android && ./gradlew assembleRelease
+
